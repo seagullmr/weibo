@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use function foo\func;
 use Illuminate\Notifications\Notifiable; // 消息通知相关功能引用
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable; // 授权相关功能的引用
@@ -27,6 +28,16 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    // 生成令牌
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            $user->activation_token = str_random(30);
+        });
+    }
 
     /**
      * The attributes that should be cast to native types.
